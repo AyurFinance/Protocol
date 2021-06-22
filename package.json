@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "migrate": "truffle migrate",
     "coverage": "truffle run coverage && cat coverage/lcov.info | coveralls",
     "test": "truffle test"
   },
