@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
 contract MeeloWrapper {
@@ -7,8 +8,8 @@ contract MeeloWrapper {
 		address[] optionsSold;
 
 		mapping(address => mapping(address => uint256)) collateralAssetAmount;
-		mapping(address => uin256) optionsBoughtAmount;
-		mapping(address => uin256) optionsSoldAmountAmount;
+		mapping(address => uint256) optionsBoughtAmount;
+		mapping(address => uint256) optionsSoldAmountAmount;
 	}
 
 }

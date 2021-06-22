@@ -34,23 +34,25 @@ contract MeeloOption is IMeeloOption, ERC20 {
 		uint256 _exerciseWindowDuration,
 		OptionType _optionType,
 		ExerciseType _exerciseType,
-		UnderlyingAssetType _underlyingAssetType,
-	) public ERC20(name, symbol) {
+		UnderlyingAssetType _underlyingAssetType
+	) ERC20(name, symbol) {
 		require(_underlyingAsset.isContract(), "MeeloOption: underlying asset is not a contract");
 		require(_strikeAsset.isContract(), "MeeloOption: strike asset is not a contract");
 		require(_underlyingAsset != _strikeAsset, "MeeloOption: strike asset & underlying asset can't be the same");
-		require(_expiry > now, "MeeloOption: invalid expiry");
+		require(_expiry > block.timestamp, "MeeloOption: invalid expiry");
 
 		exerciseType = _exerciseType;
 		expiry = _expiry;
 
-		if(exerciseType == ExerciseType.European) {
+		uint256 _exerciseWindowBegins;
+		if(_exerciseType == ExerciseType.EUROPEAN) {
 			require(_exerciseWindowDuration >= 1 days, "MeeloOption: minimum option exercise window duration is 1 day");
-			exerciseWindowBegins = _expiry.sub(_exerciseWindowDuration);
+			_exerciseWindowBegins = _expiry.sub(_exerciseWindowDuration);
 		} else {
-			exerciseWindowBegins = block.timestamp;
+			_exerciseWindowBegins = block.timestamp;
 		}
 
+		exerciseWindowBegins = _exerciseWindowBegins;
 		optionType = _optionType;
 		underlyingAsset = _underlyingAsset;
 		underlyingAssetType = _underlyingAssetType;

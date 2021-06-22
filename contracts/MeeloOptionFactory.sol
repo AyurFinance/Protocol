@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-import "../interfaces/IMeeloOption.sol";
+import "./interfaces/IMeeloOption.sol";
 import "./MeeloOption.sol";
 
 contract MeeloOptionFactory {
@@ -16,9 +16,9 @@ contract MeeloOptionFactory {
         uint256 strikePrice,
         uint256 expiry,
         uint256 exerciseWindowDuration,
-        OptionType optionType,
-		ExerciseType exerciseType,
-		UnderlyingAssetType underlyingAssetType,
+        IMeeloOption.OptionType optionType,
+		IMeeloOption.ExerciseType exerciseType,
+		IMeeloOption.UnderlyingAssetType underlyingAssetType
     );
 
 	function createMeeloOption(
@@ -29,9 +29,9 @@ contract MeeloOptionFactory {
 		uint256 strikePrice,
 		uint256 expiry,
 		uint256 exerciseWindowDuration,
-		OptionType optionType,
-		ExerciseType exerciseType,
-		UnderlyingAssetType underlyingAssetType,
+		IMeeloOption.OptionType optionType,
+		IMeeloOption.ExerciseType exerciseType,
+		IMeeloOption.UnderlyingAssetType underlyingAssetType
 	) external returns (IMeeloOption) {
 		MeeloOption option = new MeeloOption(
 			name,
@@ -43,7 +43,7 @@ contract MeeloOptionFactory {
 			exerciseWindowDuration,
 			optionType,
 			exerciseType,
-			underlyingAssetType,
+			underlyingAssetType
 		);
 
 		address optionAddr = address(option);
@@ -61,5 +61,7 @@ contract MeeloOptionFactory {
 			exerciseType,
 			underlyingAssetType
 		);
+
+		return option;
 	} 
 }

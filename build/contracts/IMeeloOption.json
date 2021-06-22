@@ -1,0 +1,1379 @@
+{
+  "contractName": "IMeeloOption",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "exerciser",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Exercise",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Mint",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "optionAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "strikeAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "underlyingAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Unmint",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "strikeAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "underlyingAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdraw",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.5+commit.a4f2e591\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"exerciser\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Exercise\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Mint\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"optionAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"strikeAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingAmount\",\"type\":\"uint256\"}],\"name\":\"Unmint\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"strikeAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingAmount\",\"type\":\"uint256\"}],\"name\":\"Withdraw\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"allowance(address,address)\":{\"details\":\"Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through {transferFrom}. This is zero by default. This value changes when {approve} or {transferFrom} are called.\"},\"approve(address,uint256)\":{\"details\":\"Sets `amount` as the allowance of `spender` over the caller's tokens. Returns a boolean value indicating whether the operation succeeded. IMPORTANT: Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729 Emits an {Approval} event.\"},\"balanceOf(address)\":{\"details\":\"Returns the amount of tokens owned by `account`.\"},\"totalSupply()\":{\"details\":\"Returns the amount of tokens in existence.\"},\"transfer(address,uint256)\":{\"details\":\"Moves `amount` tokens from the caller's account to `recipient`. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event.\"},\"transferFrom(address,address,uint256)\":{\"details\":\"Moves `amount` tokens from `sender` to `recipient` using the allowance mechanism. `amount` is then deducted from the caller's allowance. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event.\"}},\"version\":1},\"userdoc\":{\"events\":{\"Mint(address,uint256)\":{\"notice\":\"Events \"}},\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IMeeloOption.sol\":\"IMeeloOption\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IERC20.sol\":{\"keccak256\":\"0xb55c91551ef864f86edd296378fc3430f19798c0d1de468ff772a83a842df24c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f118e5d475795b9e612bb6c139db18493e65f47f181ddcef446f4fa43e7f80f5\",\"dweb:/ipfs/QmSRWmUWxpjp8jMtDHqWysWbZqFNVKAyLHcmBtjJRvmoLF\"]},\"/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IMeeloOption.sol\":{\"keccak256\":\"0xe01d70dc5f97e4e33415380221eec93ca922cc363e106eeb90aa4f3011712796\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://b02e37c2f624a1c5a8a36ae14f9fbda79b3eb93f999c176482dc879fa9902db4\",\"dweb:/ipfs/Qmf5i32zuigbvbzEZJmq1YsjC4rWWpDSoVKjDYU3s88VY2\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.0;\n\nimport \"./IERC20.sol\";\n\ninterface IMeeloOption is IERC20 {\n    /** Enums */\n    // @dev 0 for Put, 1 for Call\n    enum OptionType { PUT, CALL }\n    // @dev 0 for European, 1 for American\n    enum ExerciseType { EUROPEAN, AMERICAN }\n    // @dev 0 for CRYPTO, 1 for Traditional\n    enum UnderlyingAssetType { ADDRESSABLE, NONADDRESSABLE }\n\n    /** Events */\n    event Mint(address indexed minter, uint256 amount);\n    event Unmint(address indexed minter, uint256 optionAmount, uint256 strikeAmount, uint256 underlyingAmount);\n    event Exercise(address indexed exerciser, uint256 amount);\n    event Withdraw(address indexed minter, uint256 strikeAmount, uint256 underlyingAmount);\n\n    /** Functions */\n\n    /**\n     * @notice Locks collateral and write option tokens.\n     *\n     * @dev The issued amount ratio is 1:1, i.e., 1 option token for 1 underlying token.\n     *\n     * The collateral could be the strike or the underlying asset depending on the option type: Put or Call,\n     * respectively\n     *\n     * It presumes the caller has already called IERC20.approve() on the\n     * strike/underlying token contract to move caller funds.\n     *\n     * Options can only be minted while the series is NOT expired.\n     *\n     * It is also important to notice that options will be sent back\n     * to `msg.sender` and not the `owner`. This behavior is designed to allow\n     * proxy contracts to mint on others behalf. The `owner` will be able to remove\n     * the deposited collateral after series expiration or by calling unmint(), even\n     * if a third-party minted options on its behalf.\n     *\n     * @param amountOfOptions The amount option tokens to be issued\n     * @param owner Which address will be the owner of the options\n     */\n    // function mint(uint256 amountOfOptions, address owner) external;\n\n    /**\n     * @notice Allow option token holders to use them to exercise the amount of units\n     * of the locked tokens for the equivalent amount of the exercisable assets.\n     *\n     * @dev It presumes the caller has already called IERC20.approve() exercisable asset\n     * to move caller funds.\n     *\n     * On American options, this function can only called anytime before expiration.\n     * For European options, this function can only be called during the exerciseWindow.\n     * Meaning, after expiration and before the end of exercise window.\n     *\n     * @param amountOfOptions The amount option tokens to be exercised\n     */\n    // function exercise(uint256 amountOfOptions) external;\n}",
+  "sourcePath": "/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IMeeloOption.sol",
+  "ast": {
+    "absolutePath": "/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IMeeloOption.sol",
+    "exportedSymbols": {
+      "IERC20": [
+        77
+      ],
+      "IMeeloOption": [
+        148
+      ]
+    },
+    "id": 149,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 104,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "36:23:2"
+      },
+      {
+        "absolutePath": "/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IERC20.sol",
+        "file": "./IERC20.sol",
+        "id": 105,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 149,
+        "sourceUnit": 78,
+        "src": "61:22:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 106,
+              "name": "IERC20",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 77,
+              "src": "111:6:2"
+            },
+            "id": 107,
+            "nodeType": "InheritanceSpecifier",
+            "src": "111:6:2"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 148,
+        "linearizedBaseContracts": [
+          148,
+          77
+        ],
+        "name": "IMeeloOption",
+        "nameLocation": "95:12:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IMeeloOption.OptionType",
+            "id": 110,
+            "members": [
+              {
+                "id": 108,
+                "name": "PUT",
+                "nameLocation": "193:3:2",
+                "nodeType": "EnumValue",
+                "src": "193:3:2"
+              },
+              {
+                "id": 109,
+                "name": "CALL",
+                "nameLocation": "198:4:2",
+                "nodeType": "EnumValue",
+                "src": "198:4:2"
+              }
+            ],
+            "name": "OptionType",
+            "nameLocation": "180:10:2",
+            "nodeType": "EnumDefinition",
+            "src": "175:29:2"
+          },
+          {
+            "canonicalName": "IMeeloOption.ExerciseType",
+            "id": 113,
+            "members": [
+              {
+                "id": 111,
+                "name": "EUROPEAN",
+                "nameLocation": "272:8:2",
+                "nodeType": "EnumValue",
+                "src": "272:8:2"
+              },
+              {
+                "id": 112,
+                "name": "AMERICAN",
+                "nameLocation": "282:8:2",
+                "nodeType": "EnumValue",
+                "src": "282:8:2"
+              }
+            ],
+            "name": "ExerciseType",
+            "nameLocation": "257:12:2",
+            "nodeType": "EnumDefinition",
+            "src": "252:40:2"
+          },
+          {
+            "canonicalName": "IMeeloOption.UnderlyingAssetType",
+            "id": 116,
+            "members": [
+              {
+                "id": 114,
+                "name": "ADDRESSABLE",
+                "nameLocation": "368:11:2",
+                "nodeType": "EnumValue",
+                "src": "368:11:2"
+              },
+              {
+                "id": 115,
+                "name": "NONADDRESSABLE",
+                "nameLocation": "381:14:2",
+                "nodeType": "EnumValue",
+                "src": "381:14:2"
+              }
+            ],
+            "name": "UnderlyingAssetType",
+            "nameLocation": "346:19:2",
+            "nodeType": "EnumDefinition",
+            "src": "341:56:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 117,
+              "nodeType": "StructuredDocumentation",
+              "src": "403:13:2",
+              "text": "Events "
+            },
+            "id": 123,
+            "name": "Mint",
+            "nameLocation": "427:4:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 122,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 119,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "448:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 123,
+                  "src": "432:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 118,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 121,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "464:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 123,
+                  "src": "456:14:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 120,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "456:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "431:40:2"
+            },
+            "src": "421:51:2"
+          },
+          {
+            "anonymous": false,
+            "id": 133,
+            "name": "Unmint",
+            "nameLocation": "483:6:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 132,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 125,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "506:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "490:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 124,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "490:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 127,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "optionAmount",
+                  "nameLocation": "522:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "514:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 126,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "514:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 129,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "strikeAmount",
+                  "nameLocation": "544:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "536:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 128,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "536:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 131,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "underlyingAmount",
+                  "nameLocation": "566:16:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "558:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 130,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "558:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "489:94:2"
+            },
+            "src": "477:107:2"
+          },
+          {
+            "anonymous": false,
+            "id": 139,
+            "name": "Exercise",
+            "nameLocation": "595:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 138,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 135,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "exerciser",
+                  "nameLocation": "620:9:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 139,
+                  "src": "604:25:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 134,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "604:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 137,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "639:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 139,
+                  "src": "631:14:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 136,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "631:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "603:43:2"
+            },
+            "src": "589:58:2"
+          },
+          {
+            "anonymous": false,
+            "id": 147,
+            "name": "Withdraw",
+            "nameLocation": "658:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 146,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 141,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "683:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "667:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 140,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "667:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 143,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "strikeAmount",
+                  "nameLocation": "699:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "691:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 142,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "691:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 145,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "underlyingAmount",
+                  "nameLocation": "721:16:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "713:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 144,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "713:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "666:72:2"
+            },
+            "src": "652:87:2"
+          }
+        ],
+        "scope": 149,
+        "src": "85:2491:2",
+        "usedErrors": []
+      }
+    ],
+    "src": "36:2540:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IMeeloOption.sol",
+    "exportedSymbols": {
+      "IERC20": [
+        77
+      ],
+      "IMeeloOption": [
+        148
+      ]
+    },
+    "id": 149,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 104,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "36:23:2"
+      },
+      {
+        "absolutePath": "/Users/vcrizpy/Desktop/Protocol/contracts/Interfaces/IERC20.sol",
+        "file": "./IERC20.sol",
+        "id": 105,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 149,
+        "sourceUnit": 78,
+        "src": "61:22:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 106,
+              "name": "IERC20",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 77,
+              "src": "111:6:2"
+            },
+            "id": 107,
+            "nodeType": "InheritanceSpecifier",
+            "src": "111:6:2"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 148,
+        "linearizedBaseContracts": [
+          148,
+          77
+        ],
+        "name": "IMeeloOption",
+        "nameLocation": "95:12:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IMeeloOption.OptionType",
+            "id": 110,
+            "members": [
+              {
+                "id": 108,
+                "name": "PUT",
+                "nameLocation": "193:3:2",
+                "nodeType": "EnumValue",
+                "src": "193:3:2"
+              },
+              {
+                "id": 109,
+                "name": "CALL",
+                "nameLocation": "198:4:2",
+                "nodeType": "EnumValue",
+                "src": "198:4:2"
+              }
+            ],
+            "name": "OptionType",
+            "nameLocation": "180:10:2",
+            "nodeType": "EnumDefinition",
+            "src": "175:29:2"
+          },
+          {
+            "canonicalName": "IMeeloOption.ExerciseType",
+            "id": 113,
+            "members": [
+              {
+                "id": 111,
+                "name": "EUROPEAN",
+                "nameLocation": "272:8:2",
+                "nodeType": "EnumValue",
+                "src": "272:8:2"
+              },
+              {
+                "id": 112,
+                "name": "AMERICAN",
+                "nameLocation": "282:8:2",
+                "nodeType": "EnumValue",
+                "src": "282:8:2"
+              }
+            ],
+            "name": "ExerciseType",
+            "nameLocation": "257:12:2",
+            "nodeType": "EnumDefinition",
+            "src": "252:40:2"
+          },
+          {
+            "canonicalName": "IMeeloOption.UnderlyingAssetType",
+            "id": 116,
+            "members": [
+              {
+                "id": 114,
+                "name": "ADDRESSABLE",
+                "nameLocation": "368:11:2",
+                "nodeType": "EnumValue",
+                "src": "368:11:2"
+              },
+              {
+                "id": 115,
+                "name": "NONADDRESSABLE",
+                "nameLocation": "381:14:2",
+                "nodeType": "EnumValue",
+                "src": "381:14:2"
+              }
+            ],
+            "name": "UnderlyingAssetType",
+            "nameLocation": "346:19:2",
+            "nodeType": "EnumDefinition",
+            "src": "341:56:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": {
+              "id": 117,
+              "nodeType": "StructuredDocumentation",
+              "src": "403:13:2",
+              "text": "Events "
+            },
+            "id": 123,
+            "name": "Mint",
+            "nameLocation": "427:4:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 122,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 119,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "448:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 123,
+                  "src": "432:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 118,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 121,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "464:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 123,
+                  "src": "456:14:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 120,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "456:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "431:40:2"
+            },
+            "src": "421:51:2"
+          },
+          {
+            "anonymous": false,
+            "id": 133,
+            "name": "Unmint",
+            "nameLocation": "483:6:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 132,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 125,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "506:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "490:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 124,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "490:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 127,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "optionAmount",
+                  "nameLocation": "522:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "514:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 126,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "514:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 129,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "strikeAmount",
+                  "nameLocation": "544:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "536:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 128,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "536:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 131,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "underlyingAmount",
+                  "nameLocation": "566:16:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 133,
+                  "src": "558:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 130,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "558:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "489:94:2"
+            },
+            "src": "477:107:2"
+          },
+          {
+            "anonymous": false,
+            "id": 139,
+            "name": "Exercise",
+            "nameLocation": "595:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 138,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 135,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "exerciser",
+                  "nameLocation": "620:9:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 139,
+                  "src": "604:25:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 134,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "604:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 137,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "639:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 139,
+                  "src": "631:14:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 136,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "631:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "603:43:2"
+            },
+            "src": "589:58:2"
+          },
+          {
+            "anonymous": false,
+            "id": 147,
+            "name": "Withdraw",
+            "nameLocation": "658:8:2",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 146,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 141,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "minter",
+                  "nameLocation": "683:6:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "667:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 140,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "667:7:2",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 143,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "strikeAmount",
+                  "nameLocation": "699:12:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "691:20:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 142,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "691:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 145,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "underlyingAmount",
+                  "nameLocation": "721:16:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 147,
+                  "src": "713:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 144,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "713:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "666:72:2"
+            },
+            "src": "652:87:2"
+          }
+        ],
+        "scope": 149,
+        "src": "85:2491:2",
+        "usedErrors": []
+      }
+    ],
+    "src": "36:2540:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.5+commit.a4f2e591.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-06-22T12:11:45.643Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "allowance(address,address)": {
+        "details": "Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through {transferFrom}. This is zero by default. This value changes when {approve} or {transferFrom} are called."
+      },
+      "approve(address,uint256)": {
+        "details": "Sets `amount` as the allowance of `spender` over the caller's tokens. Returns a boolean value indicating whether the operation succeeded. IMPORTANT: Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729 Emits an {Approval} event."
+      },
+      "balanceOf(address)": {
+        "details": "Returns the amount of tokens owned by `account`."
+      },
+      "totalSupply()": {
+        "details": "Returns the amount of tokens in existence."
+      },
+      "transfer(address,uint256)": {
+        "details": "Moves `amount` tokens from the caller's account to `recipient`. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
+      },
+      "transferFrom(address,address,uint256)": {
+        "details": "Moves `amount` tokens from `sender` to `recipient` using the allowance mechanism. `amount` is then deducted from the caller's allowance. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "Mint(address,uint256)": {
+        "notice": "Events "
+      }
+    },
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
