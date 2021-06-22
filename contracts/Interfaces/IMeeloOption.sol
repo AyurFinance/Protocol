@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IERC20.sol";
 
 interface IMeeloOption is IERC20 {
     /** Enums */
@@ -42,7 +42,7 @@ interface IMeeloOption is IERC20 {
      * @param amountOfOptions The amount option tokens to be issued
      * @param owner Which address will be the owner of the options
      */
-    function mint(uint256 amountOfOptions, address owner) external;
+    // function mint(uint256 amountOfOptions, address owner) external;
 
     /**
      * @notice Allow option token holders to use them to exercise the amount of units
@@ -57,5 +57,5 @@ interface IMeeloOption is IERC20 {
      *
      * @param amountOfOptions The amount option tokens to be exercised
      */
-    function exercise(uint256 amountOfOptions) external;
+    // function exercise(uint256 amountOfOptions) external;
 }
