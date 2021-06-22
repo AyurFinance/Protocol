@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "coverage": "truffle run coverage",
+    "coverage": "truffle run coverage && cat coverage/lcov.info | coveralls",
     "test": "truffle test"
   },
   "repository": {
