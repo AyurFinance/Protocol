@@ -14,6 +14,7 @@ contract MeeloOption is IMeeloOption, ERC20 {
 
 	address public immutable underlyingAsset;
 	address public immutable strikeAsset;
+	address public immutable collateralAsset;
 
 	OptionType public immutable optionType;
 	ExerciseType public immutable exerciseType;
@@ -29,6 +30,7 @@ contract MeeloOption is IMeeloOption, ERC20 {
 		string memory symbol,
 		address _underlyingAsset,
 		address _strikeAsset,
+		address _collateralAsset,
 		uint256 _strikePrice,
 		uint256 _expiry,
 		uint256 _exerciseWindowDuration,
@@ -52,11 +54,18 @@ contract MeeloOption is IMeeloOption, ERC20 {
 			_exerciseWindowBegins = block.timestamp;
 		}
 
+		if(_optionType == OptionType.PUT) {
+			require(_collateralAsset == _strikeAsset, "MeeloOption: For PUT options collateral asset is the strike asset");
+		} else {
+			require(_underlyingAsset == _strikeAsset, "MeeloOption: For CALL options collateral asset is the underlying asset");
+		}
+
 		exerciseWindowBegins = _exerciseWindowBegins;
 		optionType = _optionType;
 		underlyingAsset = _underlyingAsset;
 		underlyingAssetType = _underlyingAssetType;
 		strikeAsset = _strikeAsset;
 		strikePrice = _strikePrice;
+		collateralAsset = _collateralAsset;
 	}
 }

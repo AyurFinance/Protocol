@@ -1,0 +1,9 @@
+dist: xenial
+language: node_js
+node_js:
+    - "lts/fermium"
+install:
+    - npm ci
+script:
+    - npm run test
+    - npm run coverage

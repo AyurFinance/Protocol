@@ -9,5 +9,5 @@ contract("MeeloOptionFactory", async accounts => {
 
 	it("should deploy", async () => {
 		assert.ok(web3.utils.isAddress(meeloOptionFactoryInstance.address));
-	})
+	});
 });

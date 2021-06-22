@@ -78,6 +78,8 @@ module.exports = {
   mocha: {
     // timeout: 100000
     useColors: true
+    reporter: 'eth-gas-reporter',
+    reporterOptions : { excludeContracts: ['Migrations'] }
   },
 
   // Configure your compilers
@@ -104,5 +106,6 @@ module.exports = {
 
   db: {
     enabled: false
-  }
+  },
+  plugins: ["solidity-coverage"]
 };

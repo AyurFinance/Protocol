@@ -1,0 +1,30 @@
+{
+  "name": "protocol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "coverage": "truffle run coverage",
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeeloFinance/Protocol.git"
+  },
+  "author": "Vyom Sharma (@vyomshm)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/MeeloFinance/Protocol/issues"
+  },
+  "homepage": "https://github.com/MeeloFinance/Protocol#readme",
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "coveralls": "^3.1.0",
+    "eth-gas-reporter": "^0.2.22",
+    "solidity-coverage": "^0.7.16",
+    "truffle": "^5.3.11"
+  }
+}
