@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: agpl-3.0
+// SPDX-License-Identifier: GPL-3.0
 
-pragma solidity 0.8.0;
+pragma solidity ^0.8.0;
 
 interface IPriceProvider {
     function setAssetFeeds(address[] memory _assets, address[] memory _feeds) external;
