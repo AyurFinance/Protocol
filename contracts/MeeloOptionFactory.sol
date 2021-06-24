@@ -7,6 +7,9 @@ import "./MeeloOption.sol";
 contract MeeloOptionFactory {
 	address[] public meeloOptions;
 
+	// enforces uniqueness of each option series
+	mapping(bytes32 => address) private meeloOptionHashToAddress;
+
 	/// @notice emitted when the factory creates a new Meelo Option
     event MeeloOptionCreated(
         address optionAddress,
@@ -22,10 +25,6 @@ contract MeeloOptionFactory {
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
     );
 
-    function getMeeloOptionsCount() public view returns(uint256) {
-    	return meeloOptions.length;
-    }
-
 	function createMeeloOption(
 		string memory name,
 		string memory symbol,
@@ -39,6 +38,18 @@ contract MeeloOptionFactory {
 		IMeeloOption.ExerciseType exerciseType,
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
 	) external returns (IMeeloOption) {
+		bytes32 optionUniqueHash = _calcMeeloOptionHash(
+			underlyingAsset,
+			strikeAsset,
+			collateralAsset,
+			strikePrice,
+			expiry,
+			optionType,
+			underlyingAssetType
+		);
+
+		require(meeloOptionHashToAddress[optionUniqueHash] == address(0), "option series already exists");
+
 		MeeloOption option = new MeeloOption(
 			name,
 			symbol,
@@ -55,6 +66,7 @@ contract MeeloOptionFactory {
 
 		address optionAddr = address(option);
 		meeloOptions.push(optionAddr);
+		meeloOptionHashToAddress[optionUniqueHash] = optionAddr;
 
 		emit MeeloOptionCreated(
 			optionAddr,
@@ -71,5 +83,21 @@ contract MeeloOptionFactory {
 		);
 
 		return option;
+	}
+
+	function getMeeloOptionsCount() public view returns(uint256) {
+    	return meeloOptions.length;
+    }
+
+	function _calcMeeloOptionHash(
+		address underlyingAsset,
+		address strikeAsset,
+		address collateralAsset,
+		uint256 strikePrice,
+		uint256 expiry,
+		IMeeloOption.OptionType optionType,
+		IMeeloOption.UnderlyingAssetType underlyingAssetType
+	) internal pure returns(bytes32) {
+		return keccak256(abi.encodePacked(underlyingAsset, strikeAsset, collateralAsset, strikePrice, expiry, optionType, underlyingAssetType));
 	} 
 }

@@ -54,6 +54,13 @@ contract MeeloOption is IMeeloOption, ERC20 {
 			_exerciseWindowBegins = block.timestamp;
 		}
 
+		if(_underlyingAssetType == UnderlyingAssetType.NONADDRESSABLE) {
+			// means completely virtual asset, example - ARAMCO, 
+			// restrict options for NON-ADDRESSABLE assets to only PUT
+			require(_optionType == OptionType.PUT, "MeeloOption: CALL Options for non NONADDRESSABLE assets have yet to be enabled!");
+			// TO-DO also enforce expiry values to be equal to those existing in Traditional options(e.g.)
+		}
+
 		if(_optionType == OptionType.PUT) {
 			require(_collateralAsset == _strikeAsset, "MeeloOption: For PUT options collateral asset is the strike asset");
 		} else {
