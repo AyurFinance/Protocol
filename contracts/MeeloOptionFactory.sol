@@ -22,6 +22,10 @@ contract MeeloOptionFactory {
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
     );
 
+    function getMeeloOptionsCount() public view returns(uint256) {
+    	return meeloOptions.length;
+    }
+
 	function createMeeloOption(
 		string memory name,
 		string memory symbol,
