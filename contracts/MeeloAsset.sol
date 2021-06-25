@@ -15,7 +15,6 @@ contract MeeloAsset  {
     string symbol;
     bool isAddressable;
 	address assetPriceFeedLinkAddress;
-    PriceConsumerV3 assetChainLinkPriceFeeder;
 
     constructor (
 		string memory _name,
@@ -27,15 +26,14 @@ contract MeeloAsset  {
         // Need to check if that's the coorect way once
 		require(msg.sender != address(0), "Only the owner of contract can create new asset");
 
-        assetChainLinkPriceFeeder = new PriceConsumerV3(_assetPriceFeedLinkAddress);
 		name = _name;
 		symbol = _symbol;
         isAddressable = _isAddressable;
         assetPriceFeedLinkAddress = _assetPriceFeedLinkAddress;
 	}
 
-    function getAssetPrice() external view returns(int256) {
-
-     return assetChainLinkPriceFeeder.getLatestPrice();
+    function getAssetPrice(AssetPriceFeeder Feeder) external view returns(int256) {
+    
+     return Feeder.getLatestPrice(assetPriceFeedLinkAddress);
     }
 }

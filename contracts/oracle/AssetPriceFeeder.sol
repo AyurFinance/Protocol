@@ -3,18 +3,22 @@ pragma solidity ^0.8.0;
 
 import "../interfaces/IAggregatorV3.sol";
 
-contract PriceConsumerV3 {
+contract AssetPriceFeeder {
 
-    AggregatorV3Interface internal priceFeed;
-
-    constructor(address priceFeedAddress) public {
-        priceFeed = AggregatorV3Interface(priceFeedAddress);
+  
+    constructor() public {
     }
 
     /**
      * Returns the latest price
      */
-    function getLatestPrice() public view returns (int) {
+    function getLatestPrice(address priceFeedAddress) public view returns (int) {
+
+        IAggregatorV3  priceFeed;
+
+        priceFeed = IAggregatorV3(priceFeedAddress);
+
+
         (
             uint80 roundID, 
             int price,
@@ -22,6 +26,9 @@ contract PriceConsumerV3 {
             uint timeStamp,
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
+
+        delete priceFeed;
+        
         return price;
     }
 }
