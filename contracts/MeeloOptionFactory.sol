@@ -3,8 +3,11 @@ pragma solidity ^0.8.0;
 
 import "./interfaces/IMeeloOption.sol";
 import "./MeeloOption.sol";
+import "./libs/Address.sol";
 
 contract MeeloOptionFactory {
+	using Address for address;
+
 	address[] public meeloOptions;
 
 	// enforces uniqueness of each option series
@@ -16,7 +19,6 @@ contract MeeloOptionFactory {
         address creator,
         address indexed underlyingAsset,
         address indexed strikeAsset,
-        address indexed collateralAsset,
         uint256 strikePrice,
         uint256 expiry,
         uint256 exerciseWindowDuration,
@@ -26,11 +28,11 @@ contract MeeloOptionFactory {
     );
 
 	function createMeeloOption(
+		address meeloWrapper,
 		string memory name,
 		string memory symbol,
 		address underlyingAsset,
 		address strikeAsset,
-		address collateralAsset,
 		uint256 strikePrice,
 		uint256 expiry,
 		uint256 exerciseWindowDuration,
@@ -38,10 +40,11 @@ contract MeeloOptionFactory {
 		IMeeloOption.ExerciseType exerciseType,
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
 	) external returns (IMeeloOption) {
+		require(meeloWrapper.isContract(), "MeeloOptionFactory: MeeloWrapper is not a contract");
+
 		bytes32 optionUniqueHash = _calcMeeloOptionHash(
 			underlyingAsset,
 			strikeAsset,
-			collateralAsset,
 			strikePrice,
 			expiry,
 			optionType,
@@ -51,11 +54,11 @@ contract MeeloOptionFactory {
 		require(meeloOptionHashToAddress[optionUniqueHash] == address(0), "option series already exists");
 
 		MeeloOption option = new MeeloOption(
+			meeloWrapper,
 			name,
 			symbol,
 			underlyingAsset,
 			strikeAsset,
-			collateralAsset,
 			strikePrice,
 			expiry,
 			exerciseWindowDuration,
@@ -73,7 +76,6 @@ contract MeeloOptionFactory {
 			msg.sender,
 			underlyingAsset,
 			strikeAsset,
-			collateralAsset,
 			strikePrice,
 			expiry,
 			exerciseWindowDuration,
@@ -92,12 +94,11 @@ contract MeeloOptionFactory {
 	function _calcMeeloOptionHash(
 		address underlyingAsset,
 		address strikeAsset,
-		address collateralAsset,
 		uint256 strikePrice,
 		uint256 expiry,
 		IMeeloOption.OptionType optionType,
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
 	) internal pure returns(bytes32) {
-		return keccak256(abi.encodePacked(underlyingAsset, strikeAsset, collateralAsset, strikePrice, expiry, optionType, underlyingAssetType));
+		return keccak256(abi.encodePacked(underlyingAsset, strikeAsset, strikePrice, expiry, optionType, underlyingAssetType));
 	} 
 }

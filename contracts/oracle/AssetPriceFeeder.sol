@@ -6,8 +6,7 @@ import "../interfaces/IAggregatorV3.sol";
 contract AssetPriceFeeder {
 
   
-    constructor() public {
-    }
+    constructor() {}
 
     /**
      * Returns the latest price

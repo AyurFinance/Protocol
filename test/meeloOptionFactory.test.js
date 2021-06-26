@@ -1,3 +1,4 @@
+const MeeloWrapper = artifacts.require("MeeloWrapper");
 const MeeloOptionFactory = artifacts.require("MeeloOptionFactory");
 const MockWETH = artifacts.require("MockWETH");
 const MockDAI = artifacts.require("MockDAI");
@@ -20,6 +21,7 @@ const MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE = 0;
 const MEELO_OPTION_UNDERLYING_ASSET_TYPE_NON_ADDRESSABLE = 1;
 
 contract("MeeloOptionFactory", async accounts => {
+	let meeloWrapperInstance;
 	let meeloOptionFactoryInstance;
 
 	const SECONDS_IN_DAY = 86400;
@@ -50,11 +52,13 @@ contract("MeeloOptionFactory", async accounts => {
 	let exerciseType;
 	let underlyingAssetType;
 
-	beforeEach(async () => {
+	before(async () => {
+		meeloDeployer = accounts[0];
+
+		meeloWrapperInstance = await MeeloWrapper.new({ from: meeloDeployer });
 		meeloOptionFactoryInstance = await MeeloOptionFactory.deployed();
 
 		// deploy new instance of factory
-		meeloDeployer = accounts[0];
 		meeloOptionFactoryInstance = await MeeloOptionFactory.new({ from: meeloDeployer });
 
 		// deploy mock tokens
@@ -76,24 +80,24 @@ contract("MeeloOptionFactory", async accounts => {
 
 	it("should deploy a PUT options contract correctly", async () => {
 		const currentTime = await time.latest();
-		expiry = currentTime + 7 * 86400; // 7 days from latest
+		expiry = currentTime.toNumber() + 7 * 86400; // 7 days from latest
 		exerciseWindowDuration = 48 * 60 * 60; // 48 hours
 		name = "WETH:DAI PUT 1800 " + (new Date(expiry * 1000).toUTCString());
 		symbol = "WETH:DAI PUT 1800"
 		underlyingAsset = mockWethInstance.address;
 		strikeAsset = mockDaiInstance.address;
-		collateralAsset = mockDaiInstance.address;
+		// collateralAsset = mockDaiInstance.address;
 		strikePrice = 1800;
 		optionType = MEELO_OPTION_TYPE_PUT;
 		exerciseType = MEELO_OPTION_EXERCISE_TYPE_EUROPEAN;
 		underlyingAssetType = MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE;
 
 		const newTx = await meeloOptionFactoryInstance.createMeeloOption(
+			meeloWrapperInstance.address,
 			name,
 			symbol,
 			underlyingAsset,
 			strikeAsset,
-			collateralAsset,
 			strikePrice,
 			expiry,
 			exerciseWindowDuration,
@@ -107,7 +111,6 @@ contract("MeeloOptionFactory", async accounts => {
 	        creator: meeloDeployer,
 	        underlyingAsset: mockWethInstance.address,
 	        strikeAsset: mockDaiInstance.address,
-	        collateralAsset: mockDaiInstance.address,
 	        strikePrice: strikePrice.toString(),
 	        expiry: expiry.toString(),
 	        exerciseWindowDuration: exerciseWindowDuration.toString(),
@@ -116,5 +119,53 @@ contract("MeeloOptionFactory", async accounts => {
 	        underlyingAssetType: MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE.toString(),
 	    });
 	});
+
+	it("should deploy a CALL options contract correctly", async () => {
+		const currentTime = await time.latest();
+		expiry = currentTime.toNumber() + 7 * 86400; // 7 days from latest
+		exerciseWindowDuration = 48 * 60 * 60; // 48 hours
+		name = "WETH:DAI CALL 2500 " + (new Date(expiry * 1000).toUTCString());
+		symbol = "WETH:DAI CALL 2500"
+		underlyingAsset = mockWethInstance.address;
+		strikeAsset = mockDaiInstance.address;
+		// collateralAsset = mockDaiInstance.address;
+		strikePrice = 2500;
+		optionType = MEELO_OPTION_TYPE_CALL;
+		exerciseType = MEELO_OPTION_EXERCISE_TYPE_EUROPEAN;
+		underlyingAssetType = MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE;
+
+		const newTx = await meeloOptionFactoryInstance.createMeeloOption(
+			meeloWrapperInstance.address,
+			name,
+			symbol,
+			underlyingAsset,
+			strikeAsset,
+			strikePrice,
+			expiry,
+			exerciseWindowDuration,
+			optionType,
+			exerciseType,
+			underlyingAssetType, 
+			{ from : meeloDeployer }
+		);
+		// console.log(newTx.logs);
+		expectEvent(newTx, 'MeeloOptionCreated', {
+        creator: meeloDeployer,
+        underlyingAsset: mockWethInstance.address,
+        strikeAsset: mockDaiInstance.address,
+        strikePrice: strikePrice.toString(),
+        expiry: expiry.toString(),
+        exerciseWindowDuration: exerciseWindowDuration.toString(),
+        optionType: MEELO_OPTION_TYPE_CALL.toString(),
+        exerciseType: MEELO_OPTION_EXERCISE_TYPE_EUROPEAN.toString(),
+        underlyingAssetType: MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE.toString(),
+    });
+	});
+
+	it("should list 2 options contracts", async () => {
+		const deployedOptionsCount = await meeloOptionFactoryInstance.getMeeloOptionsCount();
+		assert.equal(deployedOptionsCount.toNumber(), 2);
+	});
+
 });
 

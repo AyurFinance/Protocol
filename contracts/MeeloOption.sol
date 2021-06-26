@@ -12,6 +12,8 @@ contract MeeloOption is IMeeloOption, ERC20 {
 	using Address for address;
 	using SafeMath for uint256;
 
+	address public immutable meeloWrapper;
+
 	address public immutable underlyingAsset;
 	address public immutable strikeAsset;
 	address public immutable collateralAsset;
@@ -26,11 +28,11 @@ contract MeeloOption is IMeeloOption, ERC20 {
 	uint256 public immutable exerciseWindowBegins;
 
 	constructor(
+		address _meeloWrapper,
 		string memory name,
 		string memory symbol,
 		address _underlyingAsset,
 		address _strikeAsset,
-		address _collateralAsset,
 		uint256 _strikePrice,
 		uint256 _expiry,
 		uint256 _exerciseWindowDuration,
@@ -42,6 +44,8 @@ contract MeeloOption is IMeeloOption, ERC20 {
 		require(_strikeAsset.isContract(), "MeeloOption: strike asset is not a contract");
 		require(_underlyingAsset != _strikeAsset, "MeeloOption: strike asset & underlying asset can't be the same");
 		require(_expiry > block.timestamp, "MeeloOption: invalid expiry");
+
+		meeloWrapper = _meeloWrapper;
 
 		exerciseType = _exerciseType;
 		expiry = _expiry;
@@ -61,10 +65,11 @@ contract MeeloOption is IMeeloOption, ERC20 {
 			// TO-DO also enforce expiry values to be equal to those existing in Traditional options(e.g.)
 		}
 
+		address _collateralAsset;
 		if(_optionType == OptionType.PUT) {
-			require(_collateralAsset == _strikeAsset, "MeeloOption: For PUT options collateral asset is the strike asset");
+			_collateralAsset = _strikeAsset;
 		} else {
-			require(_underlyingAsset == _strikeAsset, "MeeloOption: For CALL options collateral asset is the underlying asset");
+			_collateralAsset = _underlyingAsset;
 		}
 
 		exerciseWindowBegins = _exerciseWindowBegins;
@@ -74,5 +79,30 @@ contract MeeloOption is IMeeloOption, ERC20 {
 		strikeAsset = _strikeAsset;
 		strikePrice = _strikePrice;
 		collateralAsset = _collateralAsset;
+	}
+
+	function writeMeeloOptions(uint256 amount, address account) external override {
+		require(msg.sender == meeloWrapper, "MeeloOption: Only the meeloWrapper contract can mint options");
+		require(amount > 0, "MeeloOption: set an amount > 0 to write options");
+
+		uint256 collateralAmountRequired = _calcCollateralAmountRequired(amount);
+		// safe transfer collateral assets from meelo option to this contract
+		IERC20(collateralAsset).safeTransferFrom(account, address(this), collateralAmountRequired);
+
+		// mint meelo option for writer
+		_mint(account, amount);
+
+		emit Write(account, amount);
+	}
+
+	function _calcCollateralAmountRequired(uint256 _meeloOptionAmount) internal view returns(uint256) {
+		uint256 collateralAmountRequired;
+		if(optionType == OptionType.PUT) {
+			collateralAmountRequired = _meeloOptionAmount.mul(strikePrice);
+		} else {
+			require(underlyingAssetType == UnderlyingAssetType.ADDRESSABLE, "MeeloOption: Can only mint call options for addressable assets");
+			collateralAmountRequired = _meeloOptionAmount;
+		}
+		return collateralAmountRequired;
 	}
 }
