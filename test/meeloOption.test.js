@@ -55,6 +55,10 @@ contract("MeeloOption", async accounts => {
 	let exerciseType;
 	let underlyingAssetType;
 
+	const decimals = new BN(18);
+	const tokenbits = (new BN(10)).pow(decimals);
+	// const tokenbits = web3.utils.toBN(10).pow(new BN(18)
+
 	before(async () => {
 		meeloDeployer = accounts[0];
 
@@ -66,8 +70,8 @@ contract("MeeloOption", async accounts => {
 		tokenDeployer = accounts[1];
 		userA = accounts[2];
 		userB = accounts[3];
-		mockWethInstance = await MockWETH.new("Wrapped Ethereum", "WETH", userA, 1000, { from: tokenDeployer });
-		mockDaiInstance = await MockDAI.new("DAI Stablecoin", "DAI", userB, 50000, { from: tokenDeployer });
+		mockWethInstance = await MockWETH.new("Wrapped Ethereum", "WETH", userA, new BN(1000).mul(tokenbits), { from: tokenDeployer });
+		mockDaiInstance = await MockDAI.new("DAI Stablecoin", "DAI", userB, new BN(50000).mul(tokenbits), { from: tokenDeployer });
 
 		// set correct options vars
 		currentTime = await time.latest();
@@ -83,7 +87,7 @@ contract("MeeloOption", async accounts => {
 		underlyingAsset = mockWethInstance.address;
 		strikeAsset = mockDaiInstance.address;
 		// collateralAsset = mockDaiInstance.address;
-		strikePrice = 1800;
+		strikePrice = new BN(1800).mul(tokenbits);
 		optionType = MEELO_OPTION_TYPE_PUT;
 		exerciseType = MEELO_OPTION_EXERCISE_TYPE_EUROPEAN;
 		underlyingAssetType = MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE;
@@ -124,12 +128,60 @@ contract("MeeloOption", async accounts => {
 		assert.equal(await deployedMeeloOptionsContract.symbol(), symbol);
 		assert.equal(await deployedMeeloOptionsContract.underlyingAsset(), underlyingAsset);
 		assert.equal(await deployedMeeloOptionsContract.strikeAsset(), strikeAsset);
-		assert.equal(await deployedMeeloOptionsContract.strikePrice(), strikePrice);
+		assert.equal((await deployedMeeloOptionsContract.strikePrice()).toString(), strikePrice.toString());
 		assert.equal(await deployedMeeloOptionsContract.expiry(), expiry);
 		assert.equal(await deployedMeeloOptionsContract.optionType(), MEELO_OPTION_TYPE_PUT.toString());
 		assert.equal(await deployedMeeloOptionsContract.exerciseType(), MEELO_OPTION_EXERCISE_TYPE_EUROPEAN.toString());
 		assert.equal(await deployedMeeloOptionsContract.underlyingAssetType(), MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE.toString());
 		assert.equal(await deployedMeeloOptionsContract.collateralAsset(), strikeAsset);
+	});
+
+	describe("Meelo PUTs", async () => {
+		let deployedMeeloPutsContractAddr;
+ 		let deployedMeeloPutsContract;
+
+		before(async () => {
+			deployedMeeloPutsContractAddr = await meeloOptionFactoryInstance.meeloOptions(0);
+			deployedMeeloPutsContract = await MeeloOption.at(deployedMeeloPutsContractAddr); 
+		});
+
+		it("should should fail to mint meelo put option tokens directly", async () => {
+			await expectRevert(
+				deployedMeeloPutsContract.writeMeeloOptions(10, userA),
+				"MeeloOption: Only the meeloWrapper contract can mint options"
+			);
+		});
+
+		it("should fail to mint 0 meelo put option tokens via meelo wrapper", async () => {
+			await expectRevert(
+				meeloWrapperInstance.writeMeeloOptions(deployedMeeloPutsContractAddr, 0, userB),
+				"MeeloOption: set an amount > 0 to write options"
+			);
+		});
+
+		it("should fail to mint meelo put option tokens via meelo wrapper without approval", async () => {
+			await expectRevert(
+				meeloWrapperInstance.writeMeeloOptions(deployedMeeloPutsContractAddr, 1, userB),
+				"ERC20: transfer amount exceeds allowance -- Reason given: ERC20: transfer amount exceeds allowance."
+			);
+		});
+
+		it("should successfully mint 1 meelo put option tokens via meelo wrapper", async () => {
+			// approve token allowance
+			await mockDaiInstance.approveInternal(userB, deployedMeeloPutsContractAddr, strikePrice);
+			let allowance = await mockDaiInstance.allowance(userB, deployedMeeloPutsContractAddr);
+			assert.equal(allowance.toString(), strikePrice.toString());
+
+			let amountToMint = new BN(1).mul(tokenbits);
+			const newTx = await meeloWrapperInstance.writeMeeloOptions(deployedMeeloPutsContractAddr, amountToMint, userB);
+			expectEvent.inTransaction(newTx.tx, deployedMeeloPutsContract, "Write", {
+				optionWriter: userB,
+				amount: amountToMint
+			});
+
+			let optionBalance = await deployedMeeloPutsContract.balanceOf(userB);
+			assert.equal(optionBalance.toString(), amountToMint.toString());
+		});
 	});
 
 	it("should deploy with correct params for a CALL Option", async () => {
@@ -138,7 +190,7 @@ contract("MeeloOption", async accounts => {
 		underlyingAsset = mockWethInstance.address;
 		strikeAsset = mockDaiInstance.address;
 		// collateralAsset = mockDaiInstance.address;
-		strikePrice = 2500;
+		strikePrice = new BN(2500).mul(tokenbits);
 		optionType = MEELO_OPTION_TYPE_CALL;
 		exerciseType = MEELO_OPTION_EXERCISE_TYPE_EUROPEAN;
 		underlyingAssetType = MEELO_OPTION_UNDERLYING_ASSET_TYPE_ADDRESSABLE;
@@ -179,7 +231,7 @@ contract("MeeloOption", async accounts => {
 		assert.equal(await deployedMeeloOptionsContract.symbol(), symbol);
 		assert.equal(await deployedMeeloOptionsContract.underlyingAsset(), underlyingAsset);
 		assert.equal(await deployedMeeloOptionsContract.strikeAsset(), strikeAsset);
-		assert.equal(await deployedMeeloOptionsContract.strikePrice(), strikePrice);
+		assert.equal((await deployedMeeloOptionsContract.strikePrice()).toString(), strikePrice.toString());
 		assert.equal(await deployedMeeloOptionsContract.expiry(), expiry);
 		assert.equal(await deployedMeeloOptionsContract.optionType(), optionType.toString());
 		assert.equal(await deployedMeeloOptionsContract.exerciseType(), exerciseType.toString());

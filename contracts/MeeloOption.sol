@@ -98,7 +98,7 @@ contract MeeloOption is IMeeloOption, ERC20 {
 	function _calcCollateralAmountRequired(uint256 _meeloOptionAmount) internal view returns(uint256) {
 		uint256 collateralAmountRequired;
 		if(optionType == OptionType.PUT) {
-			collateralAmountRequired = _meeloOptionAmount.mul(strikePrice);
+			collateralAmountRequired = _meeloOptionAmount.mul(strikePrice).div(10**uint256(18));
 		} else {
 			require(underlyingAssetType == UnderlyingAssetType.ADDRESSABLE, "MeeloOption: Can only mint call options for addressable assets");
 			collateralAmountRequired = _meeloOptionAmount;

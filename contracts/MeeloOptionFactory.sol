@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
+import "./interfaces/IERC20Metadata.sol";
 import "./interfaces/IMeeloOption.sol";
 import "./MeeloOption.sol";
 import "./libs/Address.sol";
@@ -41,6 +42,8 @@ contract MeeloOptionFactory {
 		IMeeloOption.UnderlyingAssetType underlyingAssetType
 	) external returns (IMeeloOption) {
 		require(meeloWrapper.isContract(), "MeeloOptionFactory: MeeloWrapper is not a contract");
+		require(IERC20Metadata(underlyingAsset).decimals() == 18, "MeeloOptionFactory: Underlying Asset does not have 18 decimals");
+		require(IERC20Metadata(strikeAsset).decimals() == 18, "MeeloOptionFactory: Strike Asset does not have 18 decimals");
 
 		bytes32 optionUniqueHash = _calcMeeloOptionHash(
 			underlyingAsset,
