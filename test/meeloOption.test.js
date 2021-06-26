@@ -238,5 +238,54 @@ contract("MeeloOption", async accounts => {
 		assert.equal(await deployedMeeloOptionsContract.underlyingAssetType(), underlyingAssetType.toString());
 		assert.equal(await deployedMeeloOptionsContract.collateralAsset(), underlyingAsset);
 	});
+
+	describe("Meelo CALLs", async () => {
+		let deployedMeeloCallsContractAddr;
+ 		let deployedMeeloCallsContract;
+
+		before(async () => {
+			deployedMeeloCallsContractAddr = await meeloOptionFactoryInstance.meeloOptions(1);
+			deployedMeeloCallsContract = await MeeloOption.at(deployedMeeloCallsContractAddr); 
+		});
+
+		it("should should fail to mint meelo call option tokens directly", async () => {
+			await expectRevert(
+				deployedMeeloCallsContract.writeMeeloOptions(10, userA),
+				"MeeloOption: Only the meeloWrapper contract can mint options"
+			);
+		});
+
+		it("should fail to mint 0 meelo call option tokens via meelo wrapper", async () => {
+			await expectRevert(
+				meeloWrapperInstance.writeMeeloOptions(deployedMeeloCallsContractAddr, 0, userA),
+				"MeeloOption: set an amount > 0 to write options"
+			);
+		});
+
+		it("should fail to mint meelo call option tokens via meelo wrapper without approval", async () => {
+			await expectRevert(
+				meeloWrapperInstance.writeMeeloOptions(deployedMeeloCallsContractAddr, 1, userA),
+				"ERC20: transfer amount exceeds allowance -- Reason given: ERC20: transfer amount exceeds allowance."
+			);
+		});
+
+		it("should successfully mint 1 meelo call option tokens via meelo wrapper", async () => {
+			// approve token allowance
+			const wethAllowance = new BN(1).mul(tokenbits)
+			await mockWethInstance.approveInternal(userA, deployedMeeloCallsContractAddr, wethAllowance);
+			let allowance = await mockWethInstance.allowance(userA, deployedMeeloCallsContractAddr);
+			assert.equal(allowance.toString(), wethAllowance.toString());
+
+			let amountToMint = new BN(1).mul(tokenbits);
+			const newTx = await meeloWrapperInstance.writeMeeloOptions(deployedMeeloCallsContractAddr, amountToMint, userA);
+			expectEvent.inTransaction(newTx.tx, deployedMeeloCallsContract, "Write", {
+				optionWriter: userA,
+				amount: amountToMint
+			});
+
+			let optionBalance = await deployedMeeloCallsContract.balanceOf(userA);
+			assert.equal(optionBalance.toString(), amountToMint.toString());
+		});
+	});
 });
 
