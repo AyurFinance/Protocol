@@ -22,5 +22,5 @@ interface IMeeloOption is IERC20 {
 
     function writeMeeloOptions(uint256 amount, address account) external;
 
-    // function exerciseMeeloOption(uint256 amountOfOptions) external;
+    function exerciseMeeloOptions(uint256 amount, address account) external;
 }

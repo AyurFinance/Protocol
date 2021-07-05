@@ -22,4 +22,9 @@ contract MeeloWrapper is Ownable {
 		IMeeloOption meeloOptionSeriesImpl = IMeeloOption(meeloOptionSeries); 
 		meeloOptionSeriesImpl.writeMeeloOptions(amount, optionWriter);
 	}
+
+	function exerciseMeeloOptions(address meeloOptionSeries, uint256 amount, address account) public {
+		IMeeloOption meeloOptionSeriesImpl = IMeeloOption(meeloOptionSeries); 
+		meeloOptionSeriesImpl.exerciseMeeloOptions(amount, account);
+	}
 }
